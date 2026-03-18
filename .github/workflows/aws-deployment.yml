@@ -1,0 +1,41 @@
+name: Continuous Deployment (AWS)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+      contents: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to AWS via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: GITHUB_TOKEN
+          script: |
+            cd ~/mysawit-deployment || exit
+            
+            # update file docker-compose.yml
+            git pull origin main
+
+            # login to ghcr
+            echo "${{ secrets.GITHUB_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # pull image baru
+            sudo docker-compose pull
+
+            # restart containers
+            sudo docker-compose up -d --remove-orphans
+
+            # cleaning
+            sudo docker image prune -f
