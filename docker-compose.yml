@@ -1,3 +1,7 @@
+version: '3.8'
+
+services:
+
   # ==========================================
   # MICROSERVICES (Auth Service)
   # ==========================================
@@ -68,6 +72,6 @@
   # ==========================================
   # DEKLARASI NETWORK 
   # ==========================================
-  networks:
-    sawit-network:
-      driver: bridge
+networks:
+  sawit-network:
+    driver: bridge
