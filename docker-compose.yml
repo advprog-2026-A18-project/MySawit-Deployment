@@ -1,5 +1,5 @@
-# ==========================================
-  # 1. MICROSERVICES (Auth Service)
+  # ==========================================
+  # MICROSERVICES (Auth Service)
   # ==========================================
   auth-service:
     image: ghcr.io/advprog-2026-a18-project/autentikasi-autorisasi-manajemen-pengguna:latest 
@@ -9,6 +9,11 @@
       - SPRING_DATASOURCE_USERNAME=${AUTH_DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${AUTH_DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ADMIN_FULLNAME=${ADMIN_FULLNAME}
     networks:
       - sawit-network
     restart: always
@@ -16,7 +21,23 @@
       - "com.centurylinklabs.watchtower.enable=true"
 
   # ==========================================
-  # 2. API GATEWAY
+  # MICROSERVICES (Pembayaran Service)
+  # ==========================================
+  pembayaran-service:
+    image: ghcr.io/advprog-2026-a18-project/manajemen-pembayaran:latest 
+    container_name: sawit-pembayaran-service
+    environment:
+      - SPRING_DATASOURCE_URL=${PEMBAYARAN_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${PEMBAYARAN_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${PEMBAYARAN_DB_PASSWORD}
+    networks:
+      - sawit-network
+    restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  # ==========================================
+  # API GATEWAY
   # ==========================================
   api-gateway:
     image: ghcr.io/advprog-2026-a18-project/api-sawit-gateway:latest
@@ -32,3 +53,21 @@
     restart: always
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+
+  # ==========================================
+  # WATCHTOWER 
+  # ==========================================
+  watchtower:
+    image: containrrr/watchtower
+    container_name: sawit-watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --label-enable --cleanup
+    restart: always
+
+  # ==========================================
+  # DEKLARASI NETWORK 
+  # ==========================================
+  networks:
+    sawit-network:
+      driver: bridge
