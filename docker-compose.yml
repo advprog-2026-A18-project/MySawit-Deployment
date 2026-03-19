@@ -56,6 +56,22 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
   
+  # ==========================================
+  # MICROSERVICES (Pengiriman Hasil Panen Sawit Service)
+  # ==========================================
+  pengiriman-hasil-panen-sawit-service:
+    image: ghcr.io/advprog-2026-a18-project/pengiriman-hasil-panen-sawit:latest 
+    container_name: sawit-pengiriman-hasil-panen-service
+    environment:
+      - SPRING_DATASOURCE_URL=${HASIL_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${HASIL_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${HASIL_DB_PASSWORD}
+    networks:
+      - sawit-network
+    restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+  
 
   # ==========================================
   # API GATEWAY
