@@ -43,7 +43,7 @@ services:
   # ==========================================
   # MICROSERVICES (Manajemen Kebun Sawit Service)
   # ==========================================
-  pembayaran-service:
+  manajemen-kebun-sawit-service:
     image: ghcr.io/advprog-2026-a18-project/mysawit-manajemen-kebun-sawit:latest 
     container_name: sawit-manajemen-kebun-sawit-service
     environment:
