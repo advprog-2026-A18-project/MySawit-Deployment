@@ -41,6 +41,23 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
 
   # ==========================================
+  # MICROSERVICES (Manajemen Kebun Sawit Service)
+  # ==========================================
+  pembayaran-service:
+    image: ghcr.io/advprog-2026-a18-project/mysawit-manajemen-kebun-sawit:latest 
+    container_name: sawit-manajemen-kebun-sawit-service
+    environment:
+      - SPRING_DATASOURCE_URL=${M_KEBUN_SAWIT_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${M_KEBUN_SAWIT_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${M_KEBUN_SAWIT_DB_PASSWORD}
+    networks:
+      - sawit-network
+    restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+  
+
+  # ==========================================
   # API GATEWAY
   # ==========================================
   api-gateway:
