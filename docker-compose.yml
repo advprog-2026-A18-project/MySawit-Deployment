@@ -9,6 +9,7 @@ services:
     image: ghcr.io/advprog-2026-a18-project/autentikasi-autorisasi-manajemen-pengguna:latest 
     container_name: sawit-auth-service
     environment:
+      - SERVER_PORT=8081
       - SPRING_DATASOURCE_URL=${AUTH_DB_URL}
       - SPRING_DATASOURCE_USERNAME=${AUTH_DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${AUTH_DB_PASSWORD}
@@ -31,9 +32,11 @@ services:
     image: ghcr.io/advprog-2026-a18-project/manajemen-pembayaran:latest 
     container_name: sawit-pembayaran-service
     environment:
+      - SERVER_PORT=8085 
       - SPRING_DATASOURCE_URL=${PEMBAYARAN_DB_URL}
       - SPRING_DATASOURCE_USERNAME=${PEMBAYARAN_DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${PEMBAYARAN_DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET} 
     networks:
       - sawit-network
     restart: always
@@ -47,9 +50,11 @@ services:
     image: ghcr.io/advprog-2026-a18-project/mysawit-manajemen-kebun-sawit:latest 
     container_name: sawit-manajemen-kebun-sawit-service
     environment:
+      - SERVER_PORT=8082 
       - SPRING_DATASOURCE_URL=${M_KEBUN_SAWIT_DB_URL}
       - SPRING_DATASOURCE_USERNAME=${M_KEBUN_SAWIT_DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${M_KEBUN_SAWIT_DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET} 
     networks:
       - sawit-network
     restart: always
@@ -63,16 +68,17 @@ services:
     image: ghcr.io/advprog-2026-a18-project/pengiriman-hasil-panen-sawit:latest 
     container_name: sawit-pengiriman-hasil-panen-service
     environment:
+      - SERVER_PORT=8084 
       - SPRING_DATASOURCE_URL=${HASIL_DB_URL}
       - SPRING_DATASOURCE_USERNAME=${HASIL_DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${HASIL_DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
     networks:
       - sawit-network
     restart: always
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
   
-
   # ==========================================
   # API GATEWAY
   # ==========================================
@@ -83,7 +89,11 @@ services:
       - "8080:8080" 
     depends_on:
       - auth-service
+      - manajemen-kebun-sawit-service
+      - pengiriman-hasil-panen-sawit-service
+      - pembayaran-service
     environment:
+      - SERVER_PORT=8080
       - JWT_SECRET=${JWT_SECRET}
     networks:
       - sawit-network
@@ -102,9 +112,6 @@ services:
     command: --interval 60 --label-enable --cleanup
     restart: always
 
-  # ==========================================
-  # DEKLARASI NETWORK 
-  # ==========================================
 networks:
   sawit-network:
     driver: bridge
