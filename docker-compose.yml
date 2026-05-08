@@ -85,9 +85,10 @@ services:
     container_name: sawit-manajemen-hasil-panen-service
     environment:
       - SERVER_PORT=8083 
-      - SPRING_DATASOURCE_URL=${M_HASIL_DB_URL}
-      - SPRING_DATASOURCE_USERNAME=${M_HASIL_DB_USER}
-      - SPRING_DATASOURCE_PASSWORD=${M_HASIL_DB_PASSWORD}
+      - DB_HOST=${M_HASIL_DB_HOST}
+      - DB_NAME=${M_HASIL_DB_NAME}
+      - DB_USER=${M_HASIL_DB_USER}
+      - DB_PASSWORD=${M_HASIL_DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
     networks:
       - sawit-network
