@@ -78,6 +78,24 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
   
   # ==========================================
+  # MICROSERVICES (Manajemen Hasil Panen Sawit Service)
+  # ==========================================
+  manajemen-hasil-panen-sawit-service:
+    image: ghcr.io/advprog-2026-a18-project/manajemen-hasil-panen-sawit:latest 
+    container_name: sawit-manajemen-hasil-panen-service
+    environment:
+      - SERVER_PORT=8083 
+      - SPRING_DATASOURCE_URL=${M_HASIL_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${M_HASIL_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${M_HASIL_DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - sawit-network
+    restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+  
+  # ==========================================
   # API GATEWAY
   # ==========================================
   api-gateway:
@@ -88,6 +106,7 @@ services:
     depends_on:
       - auth-service
       - manajemen-kebun-sawit-service
+      - manajemen-hasil-panen-sawit-service
       - pengiriman-hasil-panen-sawit-service
       - pembayaran-service
     environment:
