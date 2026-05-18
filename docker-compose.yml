@@ -88,7 +88,7 @@ services:
       - DB_HOST=${M_HASIL_DB_HOST}
       - DB_NAME=${M_HASIL_DB_NAME}
       - DB_USER=${M_HASIL_DB_USER}
-      - DB_PASSWORD=${M_HASIL_DB_PASSWORD}
+      - DB_PASS=${M_HASIL_DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
     networks:
       - sawit-network
