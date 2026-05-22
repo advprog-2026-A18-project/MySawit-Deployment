@@ -183,6 +183,8 @@ services:
   watchtower:
     image: containrrr/watchtower
     container_name: sawit-watchtower
+    environment:
+      - DOCKER_API_VERSION=1.40
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 60 --label-enable --cleanup
