@@ -185,14 +185,7 @@ services:
     container_name: sawit-watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: >
-      --interval 60
-      --label-enable
-      --cleanup
-      --metrics-enabled
-      --metrics-addr=:8086
-    ports:
-      - "8086:8086"   # expose metrics agar Prometheus bisa scrape
+    command: --interval 60 --label-enable --cleanup
     restart: unless-stopped
     logging: *default-logging
 
