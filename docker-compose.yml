@@ -26,18 +26,11 @@ services:
       - ADMIN_FULLNAME=${ADMIN_FULLNAME}
       - GRPC_PORT=9091
     expose:
-      - "8081"
       - "9091"
     networks:
       - sawit-network
     restart: unless-stopped
     logging: *default-logging
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 8081 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 180s
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
@@ -57,18 +50,11 @@ services:
       - GRPC_ENABLED=true
       - GRPC_PORT=9095
     expose:
-      - "8085"
       - "9095"
     networks:
       - sawit-network
     restart: unless-stopped
     logging: *default-logging
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 8085 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 120s
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
@@ -90,21 +76,11 @@ services:
       - AUTH_GRPC_HOST=auth-service
       - AUTH_GRPC_PORT=9091
     expose:
-      - "8082"
       - "9092"
-    depends_on:
-      auth-service:
-        condition: service_healthy
     networks:
       - sawit-network
     restart: unless-stopped
     logging: *default-logging
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 8082 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 120s
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
   
@@ -130,27 +106,10 @@ services:
       - PANEN_GRPC_PORT=9093
       - PAYMENT_GRPC_HOST=pembayaran-service
       - PAYMENT_GRPC_PORT=9095
-    expose:
-      - "8084"
-    depends_on:
-      auth-service:
-        condition: service_healthy
-      manajemen-kebun-sawit-service:
-        condition: service_healthy
-      manajemen-hasil-panen-sawit-service:
-        condition: service_healthy
-      pembayaran-service:
-        condition: service_healthy
     networks:
       - sawit-network
     restart: unless-stopped
     logging: *default-logging
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 8084 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 120s
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
   
@@ -176,23 +135,11 @@ services:
       - PAYMENT_GRPC_HOST=pembayaran-service
       - PAYMENT_GRPC_PORT=9095
     expose:
-      - "8083"
       - "9093"
-    depends_on:
-      auth-service:
-        condition: service_healthy
-      pembayaran-service:
-        condition: service_healthy
     networks:
       - sawit-network
     restart: unless-stopped
     logging: *default-logging
-    healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 8083 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-      start_period: 120s
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
   
@@ -205,16 +152,11 @@ services:
     ports:
       - "8080:8080" 
     depends_on:
-      auth-service:
-        condition: service_healthy
-      manajemen-kebun-sawit-service:
-        condition: service_healthy
-      manajemen-hasil-panen-sawit-service:
-        condition: service_healthy
-      pengiriman-hasil-panen-sawit-service:
-        condition: service_healthy
-      pembayaran-service:
-        condition: service_healthy
+      - auth-service
+      - manajemen-kebun-sawit-service
+      - manajemen-hasil-panen-sawit-service
+      - pengiriman-hasil-panen-sawit-service
+      - pembayaran-service
     environment:
       - SERVER_PORT=8080
       - JWT_SECRET=${JWT_SECRET}
